@@ -72,14 +72,14 @@ exports.addTask = functions.https.onRequest((req, res) => {
         item = JSON.parse(req.body.item);
       }
 
-      if (board && item && typeof item === 'object') {
+      if (board && item && typeof item === "object") {
         const boardRef = getBoard(board);
         const newTaskRef = boardRef.child("tasks").push();
 
         newTaskRef.set({ ...item, id: newTaskRef.key }, (e) => {
           if (e) {
             functions.logger.log(`Failed to set task item. ${e.message}`);
-            res.status(500).json({
+            return res.status(500).json({
               message: `Error in addTask: Failed to set task item. ${e.message}`,
             });
           } else {
@@ -89,13 +89,13 @@ exports.addTask = functions.https.onRequest((req, res) => {
         });
       } else {
         functions.logger.log("Error in getTasks: no board in body");
-        res.status(500).json({
+        return res.status(500).json({
           message: `Error in addTask: no board in body.`,
         });
       }
     } catch (e) {
       functions.logger.log("addTask failed." + e);
-      res.status(500).json({
+      return res.status(500).json({
         message: `Error in addTask: ${e.message}.`,
       });
     }
@@ -117,7 +117,7 @@ exports.getTasks = functions.https.onRequest((req, res) => {
       getTasksFromDatabase(boardRef, res);
     } else {
       functions.logger.log("Error in getTasks: no board in body");
-      res.status(500).json({
+      return res.status(500).json({
         message: `Error in getTasks: no board in query.`,
       });
     }
@@ -134,30 +134,28 @@ exports.deleteTask = functions.https.onRequest((req, res) => {
     }
     const id = req.query.id;
     const board = req.query.board;
-    if (board && id){
+    if (board && id) {
       admin
-      .database()
-      .ref(`/boards/${board}/tasks/${id}`)
-      .remove((e) => {
-        if (e) {
-          functions.logger.log(`Failed to delete task. ${e.message}`);
-          res.status(500).json({
-            message: `Error in deleteTask: ${e.message}`,
-          });
-        } else {
-          functions.logger.log("Document successfully deleted!");
-          const boardRef = getBoard(board);
-          getTasksFromDatabase(boardRef, res);
-        }
-      });
-
+        .database()
+        .ref(`/boards/${board}/tasks/${id}`)
+        .remove((e) => {
+          if (e) {
+            functions.logger.log(`Failed to delete task. ${e.message}`);
+            return res.status(500).json({
+              message: `Error in deleteTask: ${e.message}`,
+            });
+          } else {
+            functions.logger.log("Document successfully deleted!");
+            const boardRef = getBoard(board);
+            getTasksFromDatabase(boardRef, res);
+          }
+        });
     } else {
       functions.logger.log("Error in deleteTask: no board in query");
-      res.status(500).json({
+      return res.status(500).json({
         message: `Error in deleteTask: no board in query.`,
       });
     }
-
   });
 });
 
@@ -176,7 +174,7 @@ exports.updateTask = functions.https.onRequest((req, res) => {
         item = JSON.parse(req.body.item);
       }
 
-      if (board && item && typeof item === 'object') {
+      if (board && item && typeof item === "object") {
         const boardRef = getBoard(board);
         boardRef
           .child("tasks")
@@ -184,7 +182,7 @@ exports.updateTask = functions.https.onRequest((req, res) => {
           .update(item, (e) => {
             if (e) {
               functions.logger.log(`Failed to updateTask item. ${e.message}`);
-              res.status(500).json({
+              return res.status(500).json({
                 message: `Error in updateTask: Failed to update task item. ${e.message}`,
               });
             } else {
@@ -194,13 +192,13 @@ exports.updateTask = functions.https.onRequest((req, res) => {
           });
       } else {
         functions.logger.log("Error in updateTask: no board in body");
-        res.status(500).json({
+        return res.status(500).json({
           message: `Error in updateTask: no board in body.`,
         });
       }
     } catch (e) {
       functions.logger.log("updateTask failed." + e.message);
-      res.status(500).json({
+      return res.status(500).json({
         message: `Error in updateTask: ${e.message}.`,
       });
     }
