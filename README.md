@@ -17,7 +17,7 @@ client: https://github.com/nicolit/tasks-app-demo
 <br>
 
 ## Delete task from board
-  url: `/deleteTask?id=${id}&board=${title}`
+  url: `/deleteTask?id=${id}&board=${board}`
 <br>
 
 ## Update task in board
