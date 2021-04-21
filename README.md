@@ -6,6 +6,20 @@ Defines several basic cloud functions + database functions to allow client use k
 
 client: https://github.com/nicolit/tasks-app-demo
 
+### Prerequisites
+
+Following dependencies should be installed before getting started.
+* npm
+```sh
+npm install npm@latest -g
+```
+* add firebase-tools
+```sh
+npm install -g firebase-tools
+```
+Follow the instructions on how to initialize your project:
+<a href="https://firebase.google.com/docs/functions/get-started">Initialize Your Project</a>
+
 ## Add task to board
   url: `/addTask`
 <br>
