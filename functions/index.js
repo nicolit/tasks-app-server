@@ -31,7 +31,7 @@ const getTasksFromDatabase = (boardRef, res) => {
     },
     (error) => {
       res.status(500).json({
-        message: `Something went wrong. ${error}`,
+        message: `Failed to retrieve board tasks. ${error}`,
       });
       functions.logger.info(
         "getTasksFromDatabase: Failed to send client response with db items."
@@ -40,6 +40,9 @@ const getTasksFromDatabase = (boardRef, res) => {
   );
 };
 
+/* 
+Updates board tasks counter on DB on each create,delete,update operation.
+*/
 exports.countTasks = functions.database
   .ref(`/boards/{board}/tasks/{task}`)
   .onWrite((change, context) => {
@@ -55,7 +58,10 @@ exports.countTasks = functions.database
     });
   });
 
-// https://us-central1-kanban-board-875ad.cloudfunctions.net/addTask
+/* 
+url: /addTask 
+body params: item, board
+*/
 exports.addTask = functions.https.onRequest((req, res) => {
   return cors(req, res, () => {
     if (req.method !== "POST") {
@@ -99,7 +105,9 @@ exports.addTask = functions.https.onRequest((req, res) => {
   });
 });
 
-// https://us-central1-kanban-board-875ad.cloudfunctions.net/getTasks?board=${board}
+/* 
+url: /getTasks?board=${board}
+*/
 exports.getTasks = functions.https.onRequest((req, res) => {
   return cors(req, res, () => {
     if (req.method !== "GET") {
@@ -121,7 +129,9 @@ exports.getTasks = functions.https.onRequest((req, res) => {
   });
 });
 
-// https://us-central1-kanban-board-875ad.cloudfunctions.net/deleteTask?id=${id}&board=${title}
+/* 
+url: deleteTask?id=${id}&board=${title}
+*/
 exports.deleteTask = functions.https.onRequest((req, res) => {
   return cors(req, res, () => {
     if (req.method !== "DELETE") {
@@ -156,7 +166,10 @@ exports.deleteTask = functions.https.onRequest((req, res) => {
   });
 });
 
-// https://us-central1-kanban-board-875ad.cloudfunctions.net/updateTask
+/* 
+url: updateTask
+body params: item, board
+*/
 exports.updateTask = functions.https.onRequest((req, res) => {
   return cors(req, res, () => {
     if (req.method !== "POST") {
