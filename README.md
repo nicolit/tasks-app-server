@@ -28,3 +28,6 @@ client: https://github.com/nicolit/tasks-app-demo
 * currently client supports updates in description, status, date of task. 
 * The API get's item with any change which is merged with task other keys on DB.
 <br>
+
+## License
+  See [LICENSE](/LICENSE)
