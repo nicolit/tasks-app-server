@@ -130,7 +130,7 @@ exports.getTasks = functions.https.onRequest((req, res) => {
 });
 
 /* 
-url: deleteTask?id=${id}&board=${title}
+url: /deleteTask?id=${id}&board=${board}
 */
 exports.deleteTask = functions.https.onRequest((req, res) => {
   return cors(req, res, () => {
@@ -167,7 +167,7 @@ exports.deleteTask = functions.https.onRequest((req, res) => {
 });
 
 /* 
-url: updateTask
+url: /updateTask
 body params: item, board
 */
 exports.updateTask = functions.https.onRequest((req, res) => {
