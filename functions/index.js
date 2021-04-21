@@ -46,13 +46,10 @@ exports.countTasks = functions.database
     const collectionRef = change.after.ref.parent;
     const countRef = collectionRef.parent.child("num_tasks");
 
-    // Return the promise from countRef.transaction() so our function
-    // waits for this async event to complete before it exits.
     return countRef.transaction((current) => {
       if (change.after.exists() && !change.before.exists()) {
         return (current || 0) + 1;
       } else {
-        // if (!change.after.exists() && change.before.exists()) {
         return (current || 0) - 1;
       }
     });
@@ -67,7 +64,7 @@ exports.addTask = functions.https.onRequest((req, res) => {
       });
     }
     try {
-      let { item, board } = req.body; // JSON.parse
+      let { item, board } = req.body;
       if (typeof item === "string") {
         item = JSON.parse(req.body.item);
       }
@@ -140,7 +137,7 @@ exports.deleteTask = functions.https.onRequest((req, res) => {
         .ref(`/boards/${board}/tasks/${id}`)
         .remove((e) => {
           if (e) {
-            functions.logger.log(`Failed to delete task. ${e.message}`);
+            functions.logger.log(`Failed to delete task: ${id}. ${e.message}`);
             return res.status(500).json({
               message: `Error in deleteTask: ${e.message}`,
             });
